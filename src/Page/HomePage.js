@@ -1,9 +1,9 @@
 import React  from "react";
 import TopBar from './Components/TopBar'
 import { Carousel } from "react-bootstrap";
-import photo1 from './statics/ZjKCJl2.png'
-import photo2 from './statics/1592851764_100097.jpg'
-import photo3 from './statics/08b202e9ea8181249c0b525f281a773b.jfif'
+import photo1 from './statics/IMG_0227.JPG'
+import photo2 from './statics/IMG_0279.JPG'
+import photo3 from './statics/IMG_E0245.JPG'
 import 'bootstrap/dist/css/bootstrap.min.css';
 const HomePage = () => {
     return(
@@ -17,8 +17,8 @@ const HomePage = () => {
                     alt="First slide"
                     />
                     <Carousel.Caption>
-                    <h3>秋紅谷</h3>
-                    <p>位在市中心</p>
+                    <h3>台中歌劇院</h3>
+                    <p>位在市中心附近</p>
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -29,8 +29,8 @@ const HomePage = () => {
                     />
 
                     <Carousel.Caption>
-                    <h3>我不知道這是哪裡</h3>
-                    <p>但是很漂亮</p>
+                    <h3>逢甲大學圖書館</h3>
+                    <p>很漂亮～</p>
                     </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
@@ -41,10 +41,8 @@ const HomePage = () => {
                     />
 
                     <Carousel.Caption>
-                    <h3>台中湖心亭</h3>
-                    <p>
-                        欣賞漂亮湖景
-                    </p>
+                    <h3>逢甲大學環境</h3>
+                    <p>優閒的時光</p>
                     </Carousel.Caption>
                 </Carousel.Item>
             </Carousel>

@@ -5,7 +5,7 @@ const topbar = ({currentKey}) => {
     return(
         <>
             <Navbar sticky="top" bg="dark" variant="dark" expand='lg'>
-                <Navbar.Brand>臺中城中城後台管理系統</Navbar.Brand>
+                <Navbar.Brand><h1>臺中城中城後台管理系統</h1></Navbar.Brand>
             </Navbar>
             <Nav variant="tabs" activeKey={currentKey}>
                 <Nav.Item>
