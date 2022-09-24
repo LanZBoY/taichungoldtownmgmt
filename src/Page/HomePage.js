@@ -1,12 +1,11 @@
 import React  from "react";
-import TopBar from '../Components/TopBar'
+import TopBar from './Components/TopBar'
 import { Carousel } from "react-bootstrap";
-import photo1 from '../statics/ZjKCJl2.png'
-import photo2 from '../statics/1592851764_100097.jpg'
-import photo3 from '../statics/08b202e9ea8181249c0b525f281a773b.jfif'
+import photo1 from './statics/ZjKCJl2.png'
+import photo2 from './statics/1592851764_100097.jpg'
+import photo3 from './statics/08b202e9ea8181249c0b525f281a773b.jfif'
 import 'bootstrap/dist/css/bootstrap.min.css';
 const HomePage = () => {
-    console.log(photo1)
     return(
         <>
            <TopBar currentKey={'homepage'}/>
