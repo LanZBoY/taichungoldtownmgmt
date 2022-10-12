@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import TopBar from './Components/TopBar'
-import firestore from "./utils/firebase";
+import {firestore} from "./utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import CardElement from './Components/CardList'
 import TaskContent from './Components/TaskContent'
@@ -38,7 +38,7 @@ const TaskList = () =>{
                 </Card>
             </Container>
             {/* 新增控件 */}
-            <TaskContent header="建立項目" showItem={showItem} setShowItem={setShowItem} disabled={false}/>
+            <TaskContent create={true} showItem={showItem} setShowItem={setShowItem} disabled={false}/>
         </>
     )
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, Navbar } from "react-bootstrap";
 
 const LoginPage = () => {
     const correctUserName = "admin";
@@ -24,19 +24,27 @@ const LoginPage = () => {
         if (correctUserName === userName && correctPassword === password){
             alert('登入成功!!');
             window.location.href = "/home";
+        }else{
+            alert('帳號或密碼錯誤!!');
         }
     }
 
     return (
-    <Container className="text-center">
-        <Form.Group>
-            <Form.Label>管理者帳號</Form.Label>
-            <Form.Control id="userName" type="text" value={userName} onChange={handleChange}></Form.Control>
-            <Form.Label>管理者密碼</Form.Label>
-            <Form.Control id="password" type="password" value={password} onChange={handleChange}></Form.Control>
-            <Button onClick={login}>登入</Button>
-        </Form.Group>
-    </Container>
+        <>
+            <Navbar sticky="top" bg="dark" variant="dark" expand='lg'>
+                <Navbar.Brand><h1>臺中城中城APP任務管理系統</h1></Navbar.Brand>
+            </Navbar>
+            <Container className="text-center">
+                <Form.Group>
+                    <Form.Label>管理者帳號</Form.Label>
+                    <Form.Control id="userName" type="text" value={userName} onChange={handleChange}></Form.Control>
+                    <Form.Label>管理者密碼</Form.Label>
+                    <Form.Control id="password" type="password" value={password} onChange={handleChange}></Form.Control>
+                    <Button onClick={login}>登入</Button>
+                </Form.Group>
+            </Container>
+        </>
+
     )
 };
 

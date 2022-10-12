@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 
 
-const TaskContent = ({header="", showItem, setShowItem, doc, disabled}) =>{
+const TaskContent = ({create=false, showItem, setShowItem, doc, disabled}) =>{
     const TASK_TITLE = 'taskTitle';
     const TASK_DESC = 'taskDesc';
     const [newData, setNewData] = useState(
@@ -47,16 +47,23 @@ const TaskContent = ({header="", showItem, setShowItem, doc, disabled}) =>{
         }
     }
 
+    const header = () => {
+        if (create === true){
+            return <Modal.Header closeButton>建立資料</Modal.Header>
+        }
+        return <Modal.Header closeButton>詳細資料</Modal.Header>
+    }
+
     return(
         <Modal show={showItem} onShow={showData} onHide={handleCloseItem} size = 'lg'>
-            <Modal.Header closeButton>{header}</Modal.Header>
+            {header()}
             <Modal.Body>
                 <Form className="text-center">
                     <Form.Group className="formData">
                         <Form.Label>任務標題</Form.Label>
-                        <Form.Control id="taskTitle" disabled = {disabled} type="text" value = {newData.taskTitle} onChange = {handleValueChange}></Form.Control>
+                        <Form.Control id="taskTitle" disabled = {!create} type="text" value = {newData.taskTitle} onChange = {handleValueChange}></Form.Control>
                         <Form.Label>任務描述</Form.Label>
-                        <Form.Control id="taskDesc" as='textarea' disabled = {disabled} rows={3} value = {newData.taskDesc} onChange ={handleValueChange}></Form.Control>
+                        <Form.Control id="taskDesc" as='textarea' disabled = {!create} rows={20} value = {newData.taskDesc} onChange ={handleValueChange}></Form.Control>
                     </Form.Group>
                 </Form>
             </Modal.Body>
