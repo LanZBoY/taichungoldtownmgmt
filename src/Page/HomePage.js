@@ -7,7 +7,7 @@ const HomePage = () => {
     return(
         <>
            <TopBar currentKey={'homepage'}/>
-           <img className="map" src={mapNow}></img>
+           <img className="map" src={mapNow} alt='城中城地圖'></img>
         </>
     )
 };
