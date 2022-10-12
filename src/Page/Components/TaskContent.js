@@ -65,6 +65,9 @@ const TaskContent = ({create=false, showItem, setShowItem, doc, disabled}) =>{
                         <Form.Label>任務描述</Form.Label>
                         <Form.Control id="taskDesc" as='textarea' disabled = {!create} rows={20} value = {newData.taskDesc} onChange ={handleValueChange}></Form.Control>
                     </Form.Group>
+                    <Form.Group>
+                        <Form.Label>導覽地點</Form.Label>
+                    </Form.Group>
                 </Form>
             </Modal.Body>
         </Modal>
