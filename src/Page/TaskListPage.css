@@ -1,4 +1,9 @@
 
+div.card{
+    transition: background-color 500ms;
+}
+
 div.card:hover{
     cursor: pointer;
+    background-color:rgb(218, 232, 245);
 }
