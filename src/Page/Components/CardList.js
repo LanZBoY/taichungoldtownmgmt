@@ -14,7 +14,7 @@ const CardElement = ({doc}) => {
                 <Card.Img/>
             </Card.Body>
         </Card>
-        <TaskContent header="詳細內容" showItem={showItem} setShowItem={setShowItem} doc={doc}/>
+        <TaskContent header="詳細內容" showItem={showItem} setShowItem={setShowItem} doc={doc} disabled = {true}/>
         </>
     )
 };

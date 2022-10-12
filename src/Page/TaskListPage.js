@@ -33,12 +33,12 @@ const TaskList = () =>{
                 {tasks.map((doc)=> {
                     return <CardElement doc={doc} key={doc.id}/>
                 })}
-                <Card onClick={handleShowItem} bg='success' className="text-center" text='white'>
+                <Card onClick={handleShowItem} bg='success' className="cardList text-center" text='white'>
                     <Card.Header>新增項目</Card.Header>
                 </Card>
             </Container>
             {/* 新增控件 */}
-            <TaskContent header="建立項目" showItem={showItem} setShowItem={setShowItem}/>
+            <TaskContent header="建立項目" showItem={showItem} setShowItem={setShowItem} disabled={false}/>
         </>
     )
 };

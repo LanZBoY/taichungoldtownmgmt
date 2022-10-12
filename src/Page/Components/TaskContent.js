@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 
 
-const TaskContent = ({header="", showItem, setShowItem, doc}) =>{
+const TaskContent = ({header="", showItem, setShowItem, doc, disabled}) =>{
     const TASK_TITLE = 'taskTitle';
     const TASK_DESC = 'taskDesc';
     const [newData, setNewData] = useState(
@@ -12,7 +12,6 @@ const TaskContent = ({header="", showItem, setShowItem, doc}) =>{
             taskImg : ""
         }
     );
-
     const handleCloseItem = () => {
         setNewData(
             {
@@ -42,22 +41,22 @@ const TaskContent = ({header="", showItem, setShowItem, doc}) =>{
         });
     }
 
-    useEffect(()=>{
+    const showData = () => {
         if(doc !== undefined){
             setNewData(doc.data);
         }
-    },[doc])
+    }
 
     return(
-        <Modal show={showItem} onHide={handleCloseItem} size = 'lg'>
+        <Modal show={showItem} onShow={showData} onHide={handleCloseItem} size = 'lg'>
             <Modal.Header closeButton>{header}</Modal.Header>
             <Modal.Body>
                 <Form className="text-center">
-                    <Form.Group>
+                    <Form.Group className="formData">
                         <Form.Label>任務標題</Form.Label>
-                        <Form.Control id="taskTitle" type="text" value = {newData.taskTitle} onChange = {handleValueChange}></Form.Control>
+                        <Form.Control id="taskTitle" disabled = {disabled} type="text" value = {newData.taskTitle} onChange = {handleValueChange}></Form.Control>
                         <Form.Label>任務描述</Form.Label>
-                        <Form.Control id="taskDesc" as='textarea' rows={3} value = {newData.taskDesc} onChange ={handleValueChange}></Form.Control>
+                        <Form.Control id="taskDesc" as='textarea' disabled = {disabled} rows={3} value = {newData.taskDesc} onChange ={handleValueChange}></Form.Control>
                     </Form.Group>
                 </Form>
             </Modal.Body>

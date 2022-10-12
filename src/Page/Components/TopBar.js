@@ -9,7 +9,7 @@ const topbar = ({currentKey}) => {
             </Navbar>
             <Nav variant="tabs" activeKey={currentKey}>
                 <Nav.Item>
-                    <Nav.Link href="/" eventKey="homepage">首頁</Nav.Link>
+                    <Nav.Link href="/home" eventKey="homepage">首頁</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link href="/tasklist" eventKey="tasklist">任務列表</Nav.Link>
