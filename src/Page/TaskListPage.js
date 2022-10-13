@@ -4,41 +4,46 @@ import TopBar from './Components/TopBar'
 import {firestore} from "./utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import CardElement from './Components/CardList'
-import TaskContent from './Components/TaskContent'
+import CreateTask from './Components/CreateTask'
 import { Card, Container} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './TaskListPage.css'
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "./utils/firebase"
 
 
 const TaskList = () =>{
     const [tasks, setTasks] = useState([]);
     const [showItem, setShowItem] = useState(false);
-    const handleShowItem = () => setShowItem(true)
-
+    const handleShowItem = () => setShowItem(true);
+    
     useEffect(()=>{
         getDocs(collection(firestore, 'tasks')).then((result) =>{
-            result.docs.forEach((doc) =>{
+            result.docs.forEach(async (doc) =>{
+                const data = doc.data()
+                const url = await getDownloadURL(ref(storage, data.taskImg))
+                data.taskImg = url;
                 setTasks((prev) =>{
-                    prev = [...prev, {id : doc.id, data: doc.data()}]
-                    return prev
+                    return [...prev, data]
                 })
             })
         });
+        
     },[])
 
     return(
         <>
             <TopBar currentKey={'tasklist'}/>
             <Container>
-                {tasks.map((doc)=> {
-                    return <CardElement doc={doc} key={doc.id}/>
+                {tasks.map((data, index)=> {
+                    return <CardElement data={data} key = {index} />
                 })}
                 <Card onClick={handleShowItem} bg='success' className="cardList text-center" text='white'>
                     <Card.Header>新增項目</Card.Header>
                 </Card>
             </Container>
             {/* 新增控件 */}
-            <TaskContent create={true} showItem={showItem} setShowItem={setShowItem} disabled={false}/>
+            <CreateTask showItem={showItem} setShowItem={setShowItem} disabled={false}/>
         </>
     )
 };

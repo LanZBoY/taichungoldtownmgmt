@@ -1,6 +1,6 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap/esm";
-
+import { LinkContainer } from "react-router-bootstrap";
 const topbar = ({currentKey}) => {
     return(
         <>
@@ -9,10 +9,14 @@ const topbar = ({currentKey}) => {
             </Navbar>
             <Nav variant="tabs" activeKey={currentKey}>
                 <Nav.Item>
-                    <Nav.Link href="/home" eventKey="homepage">首頁</Nav.Link>
+                        <LinkContainer to='/home'>
+                            <Nav.Link  eventKey="homepage">首頁</Nav.Link>
+                        </LinkContainer>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="/tasklist" eventKey="tasklist">任務列表</Nav.Link>
+                <LinkContainer to='/tasklist'>
+                        <Nav.Link  eventKey="tasklist">任務列表</Nav.Link>
+                        </LinkContainer>
                 </Nav.Item>
             </Nav>
         </>
