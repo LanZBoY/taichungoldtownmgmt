@@ -47,10 +47,14 @@ const CreateTask = ({showItem, setShowItem}) =>{
     }
 
     const renderMark = () =>{
-        return newContents.map((content, index) =>{
-            return <Mark data={content} key={index}/>
-        })
+        let jsxElements = []
+        for (let i = 0; i < newContents.length; i++){
+            jsxElements = [...jsxElements, <Mark contents={newContents} setContents={setNewContents} index={i} key={i}/>]
+        }
+        return jsxElements;
     }
+
+    console.log(newContents);
 
     return(
         <Modal show={showItem} onHide={handleCloseItem} size = 'lg'>
@@ -70,8 +74,8 @@ const CreateTask = ({showItem, setShowItem}) =>{
                     <Form.Group className="markData">
                         {renderMark()}
                         <ButtonGroup>
-                            <Button variant="success" onClick={handleAddContent}>新增導覽任務</Button>
-                            <Button variant="danger" onClick={handleDelContent}>刪除導覽任務</Button>
+                            <Button variant="success" onClick={handleAddContent}>新增導覽地點</Button>
+                            <Button variant="danger" onClick={handleDelContent}>刪除導覽地點</Button>
                         </ButtonGroup>
                     </Form.Group>
                 </Form>

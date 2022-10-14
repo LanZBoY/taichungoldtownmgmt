@@ -1,27 +1,46 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Form, FormGroup } from "react-bootstrap";
 
 
-const Mark = ({data}) =>{
-    const [mark, setMark] = useState(data);
-    console.log(mark);
+const Mark = ({contents, setContents, index}) =>{
     const handleMarkChange = (e) => {
         if(e.target.id === 'markTitle'){
-            setMark((prev) =>{
-                return {...prev, markTitle: e.target.value}
+            setContents((prev) => {
+                prev[index].markTitle = e.target.value
+                return [...prev]
             });
         }else if(e.target.id === 'markContent'){
-
+            const contentIndex = e.target.getAttribute('index');
+            setContents((prev) => {
+                prev[index].markContent[contentIndex] = e.target.value;
+                return [...prev]
+            })
         }else if(e.target.id === 'markLatitude'){
-            setMark((prev) =>{
-                return {...prev, markLatitude: parseFloat(e.target.value)}
+            setContents((prev) => {
+                prev[index].markLatitude = e.target.value
+                return [...prev]
             });
         }else if(e.target.id === 'markLongitude'){
-            setMark((prev) =>{
-                return {...prev, markLongitude: parseFloat(e.target.value)}
+            setContents((prev) => {
+                prev[index].markLongitude = e.target.value
+                return [...prev]
             });
         }
         
+    }
+
+    const renderMartContent = () => {
+        const reuslt = contents[index].markContent.map((content, index) =>{
+            return <Form.Control key={index} id="markContent" type="text" value={content} index = {index} onChange={handleMarkChange}></Form.Control>;
+        });
+        return reuslt;
+    }
+
+    const addContent = () => {
+        setContents((prev) => {
+            prev[index].markContent = [...prev[index].markContent, ""]
+            return [...prev]
+        });
     }
 
     return (
@@ -29,14 +48,13 @@ const Mark = ({data}) =>{
         <hr/>
         <FormGroup>
             <Form.Label >導覽地點</Form.Label>
-            <Form.Control id="markTitle" type="text" value={mark.markTitle} onChange={handleMarkChange}></Form.Control>
+            <Form.Control id="markTitle" type="text" value={contents[index].markTitle}  onChange={handleMarkChange}></Form.Control>
             <Form.Label>地點內容</Form.Label>
-            {/* 會有多個內容 */}
-            <Form.Control type="text"></Form.Control>
-            <Button>新增內容</Button>
+            {renderMartContent()}
+            <Button onClick={addContent}>新增內容</Button>
         </FormGroup>
-        <Form.Label>經度</Form.Label><Form.Control type="number" id = 'markLongitude' value={mark.markLongitude} onChange={handleMarkChange}></Form.Control>
-        <Form.Label>緯度</Form.Label><Form.Control type="number" id = 'markLatitude' value={mark.markLatitude} onChange={handleMarkChange}></Form.Control>
+        <Form.Label>經度</Form.Label><Form.Control type="number" id = 'markLongitude' onChange={handleMarkChange}></Form.Control>
+        <Form.Label>緯度</Form.Label><Form.Control type="number" id = 'markLatitude' onChange={handleMarkChange}></Form.Control>
         <Form.Control id="taskFile" type="file"></Form.Control>
         <hr/>
         </>
