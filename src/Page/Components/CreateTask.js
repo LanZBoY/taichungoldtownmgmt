@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import {Task, Content} from "../model/Task";
 import Mark from "./Mark";
 
@@ -39,13 +39,6 @@ const CreateTask = ({showItem, setShowItem}) =>{
         })
     }
 
-    const handleDelContent = () =>{
-        setNewContents((prev) =>{
-            prev.pop();
-            return [...prev]
-        })
-    }
-
     const renderMark = () =>{
         let jsxElements = []
         for (let i = 0; i < newContents.length; i++){
@@ -53,9 +46,6 @@ const CreateTask = ({showItem, setShowItem}) =>{
         }
         return jsxElements;
     }
-
-    console.log(newContents);
-
     return(
         <Modal show={showItem} onHide={handleCloseItem} size = 'lg'>
             <Modal.Header closeButton>建立任務</Modal.Header>
@@ -67,16 +57,13 @@ const CreateTask = ({showItem, setShowItem}) =>{
                         <Form.Label>任務描述</Form.Label>
                         <Form.Control id="taskDesc" as='textarea' rows={20} value = {newTask.taskDesc} onChange ={handleValueChange}></Form.Control>
                         <Form.Label>任務圖片</Form.Label>
-                        <img alt="圖片預覽"></img>
+                        <img hidden alt="預覽圖片"></img>
                         <Form.Control id="taskFile" type="file" ></Form.Control>
                     </Form.Group>
                     
                     <Form.Group className="markData">
                         {renderMark()}
-                        <ButtonGroup>
-                            <Button variant="success" onClick={handleAddContent}>新增導覽地點</Button>
-                            <Button variant="danger" onClick={handleDelContent}>刪除導覽地點</Button>
-                        </ButtonGroup>
+                        <Button variant="success" onClick={handleAddContent}>新增導覽地點</Button>
                     </Form.Group>
                 </Form>
             </Modal.Body>

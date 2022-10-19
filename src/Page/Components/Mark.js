@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, FormGroup } from "react-bootstrap";
+import { Button, Form, FormGroup, InputGroup } from "react-bootstrap";
 
 
 const Mark = ({contents, setContents, index}) =>{
@@ -29,33 +29,57 @@ const Mark = ({contents, setContents, index}) =>{
         
     }
 
+    const handleDelMarkContent = (e) => {
+        const contentIndex = e.target.getAttribute('index');
+        console.log(contents[index].markContent);
+        setContents((prev) => {
+            prev[index].markContent.splice(contentIndex, 1);
+            return [...prev];
+        });
+    };
+
     const renderMartContent = () => {
         const reuslt = contents[index].markContent.map((content, index) =>{
-            return <Form.Control key={index} id="markContent" type="text" value={content} index = {index} onChange={handleMarkChange}></Form.Control>;
+            const hint = `填入內容 ${index + 1}`;
+            
+            return (
+                <InputGroup className="inputField">
+                    <Form.Control key={index} id="markContent" type="text" value={content} index = {index} onChange={handleMarkChange} placeholder={hint}></Form.Control>
+                    <Button variant="danger" onClick={handleDelMarkContent} index = {index}>刪除</Button>
+                </InputGroup>
+                
+            );
         });
         return reuslt;
     }
 
-    const addContent = () => {
+    const addMarkContent = () => {
         setContents((prev) => {
             prev[index].markContent = [...prev[index].markContent, ""]
             return [...prev]
         });
     }
 
+    const handleDelContent = (index) =>{
+        setContents((prev) =>{
+            prev.splice(index, 1);
+            return [...prev]
+        })
+    }
+
     return (
         <>
         <hr/>
         <FormGroup>
-            <Form.Label >導覽地點</Form.Label>
+            <Form.Label className="inputField">導覽地點({index + 1})</Form.Label>
             <Form.Control id="markTitle" type="text" value={contents[index].markTitle}  onChange={handleMarkChange}></Form.Control>
-            <Form.Label>地點內容</Form.Label>
+            <Form.Label className="inputField">地點內容({index + 1})</Form.Label>
             {renderMartContent()}
-            <Button onClick={addContent}>新增內容</Button>
+                <Button onClick={addMarkContent}>新增內容</Button>
         </FormGroup>
-        <Form.Label>經度</Form.Label><Form.Control type="number" id = 'markLongitude' onChange={handleMarkChange}></Form.Control>
-        <Form.Label>緯度</Form.Label><Form.Control type="number" id = 'markLatitude' onChange={handleMarkChange}></Form.Control>
+        <Form.Label className="inputField">經緯度</Form.Label><Form.Control type="text" id = 'position' onChange={handleMarkChange} placeholder='(經度, 緯度)'></Form.Control>
         <Form.Control id="taskFile" type="file"></Form.Control>
+        <Button variant="danger" onClick={handleDelContent}>刪除導覽地點</Button>
         <hr/>
         </>
     );
