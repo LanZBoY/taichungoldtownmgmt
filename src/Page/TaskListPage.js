@@ -26,7 +26,7 @@ const TaskList = () =>{
             result.docs.forEach(async (doc) =>{
                 const data = doc.data()
                 const url = await getDownloadURL(ref(storage, data.taskImg))
-                data.taskImg = url;
+                data.taskImgURL = url;
                 setTasks((prev) =>{
                     return [...prev, data]
                 })

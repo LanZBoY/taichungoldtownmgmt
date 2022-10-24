@@ -1,8 +1,9 @@
-import React from "react";
-import { Button, Col, Form, FormGroup, InputGroup, Row } from "react-bootstrap";
+
+import { Button, Col, Form, FormGroup, InputGroup, Row, Image } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
 
 const Mark = ({contents, setContents, displayMode, index}) =>{
+
     const handleMarkChange = (e) => {
         if(e.target.id === 'markTitle'){
             setContents((prev) => {
@@ -52,6 +53,16 @@ const Mark = ({contents, setContents, displayMode, index}) =>{
         return reuslt;
     }
 
+    const renderImg = () => {
+        if (contents[index].markImgURL !== undefined){
+            return (<Image src={contents[index].markImgURL} thumbnail style={{
+                height:"50rem",
+                width:"auto"
+            }}></Image>)
+        }
+        return null;
+    }
+
     const addMarkContent = () => {
         setContents((prev) => {
             prev[index].markContent = [...prev[index].markContent, ""]
@@ -86,6 +97,7 @@ const Mark = ({contents, setContents, displayMode, index}) =>{
                 <Form.Control type="number" id = 'markLatitude' value={contents[index].markLatitude} onChange={handleMarkChange} disabled={displayMode} placeholder='緯度'></Form.Control>
             </Form.Group>
         </Row>
+            {renderImg()}
             <Form.Control className="inputField h3" id="taskFile" type="file" disabled={displayMode}></Form.Control>
             <Button variant="danger" onClick={handleDelContent} hidden={displayMode}>刪除導覽地點</Button>
         </>

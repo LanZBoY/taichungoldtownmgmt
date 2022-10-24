@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Container, Form, Modal } from "react-bootstrap";
-import { Content } from "../model/Task";
+import { Button, Container, Form, Modal, Image } from "react-bootstrap";
+import { Content, Task } from "../model/Task";
 import Mark from "./Mark";
 import { v4 as uuidv4 } from "uuid";
 
@@ -11,9 +11,11 @@ const TaskView = ({dataId, createMode, displayMode, setDisplayMode, task, setTas
     const handleCloseItem = () => {
         if(createMode === undefined){
             setDisplayMode(true);
+        }else{
+            setTask(new Task());
+            setContents([]);
         }
-        setTask(task);
-        setContents(contents);
+
         setShowItem(false);
     };
 
@@ -41,6 +43,30 @@ const TaskView = ({dataId, createMode, displayMode, setDisplayMode, task, setTas
         })
     }
 
+    
+    const handdleDisplayMode = () =>{
+        setDisplayMode(false);
+    }
+    
+    const handdleDeleteTask = () => {
+        alert("確定要刪除資料？");
+    }
+    
+    const conformData = () => {
+        if (createMode){
+            setShowItem(false);
+            /*
+            新增資料邏輯
+            */
+           setTask(new Task());
+           setContents([]);
+        }else{
+            setDisplayMode(true)
+        }
+        console.log(task);
+        console.log(contents);
+    }
+    
     const renderMark = () =>{
         let jsxElements = []
         for (let i = 0; i < contents.length; i++){
@@ -49,13 +75,11 @@ const TaskView = ({dataId, createMode, displayMode, setDisplayMode, task, setTas
         return jsxElements;
     }
 
-    const haddleDisplayMode = () =>{
-        setDisplayMode(false);
-    }
-
-    const conformData = () => {
-        console.log(task);
-        console.log(contents);
+    const renderImg = () =>{
+        if (task.taskImgURL !== ""){
+            return (<Image className="text-center" alt="圖片" src = {task.taskImgURL} thumbnail></Image>);
+        }
+        return null;
     }
 
     return(
@@ -69,8 +93,7 @@ const TaskView = ({dataId, createMode, displayMode, setDisplayMode, task, setTas
                             <Form.Control id="taskTitle" type="text" value = {task.taskTitle} onChange = {handleValueChange} disabled={displayMode}></Form.Control>
                             <Form.Label className="inputField h3">描述</Form.Label>
                             <Form.Control id="taskDesc" as='textarea' rows={20} value = {task.taskDesc} onChange ={handleValueChange} disabled={displayMode}></Form.Control>
-                            <Form.Label className="inputField h3">圖片</Form.Label>
-                            <img hidden alt="預覽圖片"></img>
+                            {renderImg()}
                             <Form.Control id="taskFile" type="file" disabled={displayMode}></Form.Control>
                         </Form.Group>
                         <Form.Group className="markData inputField">
@@ -80,10 +103,10 @@ const TaskView = ({dataId, createMode, displayMode, setDisplayMode, task, setTas
                 </Container>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="warning" hidden={!displayMode} onClick = {haddleDisplayMode}>修改</Button>
-                <Button variant="danger" hidden={!displayMode}>刪除</Button>
+                <Button variant="danger" hidden={!displayMode} onClick ={handdleDeleteTask}>刪除</Button>
+                <Button variant="warning" hidden={!displayMode} onClick = {handdleDisplayMode}>修改</Button>
                 <Button variant="success" onClick={handleAddContent} hidden={displayMode}>新增導覽地點</Button>
-                <Button variant="success" onClick={conformData}>確定</Button>
+                <Button variant="success" hidden={displayMode} onClick={conformData}>確定</Button>
             </Modal.Footer>
         </Modal>
     )
