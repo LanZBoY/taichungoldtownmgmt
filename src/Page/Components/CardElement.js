@@ -5,6 +5,7 @@ import TaskView from "./TaskView";
 const CardElement = ({taskData}) => {
     const [task, setTask] = useState(taskData);
     const [showItem, setShowItem] = useState(false);
+    const [displayMode, setDisplayMode] = useState(true)
     const [contents, setContents] = useState([]);
     const showData = async () => {
         const docSnap = await getDoc(task.contents);
@@ -21,7 +22,7 @@ const CardElement = ({taskData}) => {
                 <Card.Img className="fixImg" src={task.taskImg}/>
             </Card.Body>
         </Card>
-        <TaskView task={task} setTask={setTask} contents={contents} setContents={setContents} showItem={showItem} setShowItem={setShowItem}/>
+        <TaskView task={task} displayMode={displayMode} setDisplayMode={setDisplayMode} setTask={setTask} contents={contents} setContents={setContents} showItem={showItem} setShowItem={setShowItem}/>
         </>
     )
 };

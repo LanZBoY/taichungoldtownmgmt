@@ -11,7 +11,7 @@ import { Card, Container} from "react-bootstrap";
 import { Task } from "./model/Task";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './TaskListPage.css'
-
+import {v4 as uuidv4} from 'uuid'
 
 const TaskList = () =>{
     const [tasks, setTasks] = useState([]);
@@ -38,15 +38,15 @@ const TaskList = () =>{
         <>
             <TopBar currentKey={'tasklist'}/>
             <Container>
-                {tasks.map((taskData, index)=> {
-                    return <CardElement taskData={taskData} key = {index} />
+                {tasks.map((taskData)=> {
+                    return <CardElement taskData={taskData} key = {uuidv4()} />
                 })}
                 <Card onClick={handleShowItem} bg='success' className="cardList text-center" text='white'>
                     <Card.Header>新增項目</Card.Header>
                 </Card>
             </Container>
             {/* 新增控件 */}
-            <TaskView task={newTask} setTask={setNewTask} contents={newContents} setContents = {setNewContents} showItem={showItem} setShowItem={setShowItem} disabled={false}/>
+            <TaskView createMode task={newTask} setTask={setNewTask} contents={newContents} setContents = {setNewContents} showItem={showItem} setShowItem={setShowItem} disabled={false}/>
         </>
     )
 };
