@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, FormGroup, InputGroup } from "react-bootstrap";
+import { Button, Col, Form, FormGroup, InputGroup, Row } from "react-bootstrap";
 
 
 const Mark = ({contents, setContents, index}) =>{
@@ -44,7 +44,7 @@ const Mark = ({contents, setContents, index}) =>{
             
             return (
                 <InputGroup className="inputField">
-                    <Form.Control key={index} id="markContent" type="text" value={content} index = {index} onChange={handleMarkChange} placeholder={hint}></Form.Control>
+                    <Form.Control key={index} id="markContent" type="text" as='textarea' rows={5} value={content} index={index} onChange={handleMarkChange} placeholder={hint}></Form.Control>
                     <Button variant="danger" onClick={handleDelMarkContent} index = {index}>刪除</Button>
                 </InputGroup>
                 
@@ -77,10 +77,18 @@ const Mark = ({contents, setContents, index}) =>{
             {renderMartContent()}
                 <Button onClick={addMarkContent}>新增內容</Button>
         </FormGroup>
-        <Form.Label className="inputField">經緯度</Form.Label><Form.Control type="text" id = 'position' onChange={handleMarkChange} placeholder='(經度, 緯度)'></Form.Control>
-        <Form.Control id="taskFile" type="file"></Form.Control>
-        <Button variant="danger" onClick={handleDelContent}>刪除導覽地點</Button>
-        <hr/>
+        <Row className="mb-3">
+            <Form.Group as = {Col} md="6">
+                <Form.Label className="inputField">經度</Form.Label>
+                <Form.Control type="number" id = 'markLongitude' value={contents[index].markLongitude} onChange={handleMarkChange} placeholder='經度'></Form.Control>
+            </Form.Group>
+            <Form.Group as = {Col} md="6">
+                <Form.Label className="inputField">緯度</Form.Label>
+                <Form.Control type="number" id = 'markLatitude' value={contents[index].markLatitude} onChange={handleMarkChange} placeholder='緯度'></Form.Control>
+            </Form.Group>
+        </Row>
+            <Form.Control className="inputField" id="taskFile" type="file"></Form.Control>
+            <Button variant="danger" onClick={handleDelContent}>刪除導覽地點</Button>
         </>
     );
 }
