@@ -88,9 +88,9 @@ const TaskView = ({ dataId, createMode, displayMode, setDisplayMode, task, setTa
                     <Form>
                         <Form.Group className="formData">
                             <Form.Label className="inputField h3">標題</Form.Label>
-                            <Form.Control id="taskTitle" type="text" value={task.taskTitle} onChange={handleValueChange} disabled={displayMode}></Form.Control>
+                            <Form.Control id="taskTitle" type="text" value={task.taskTitle} placeholder="填入任務標題" onChange={handleValueChange} disabled={displayMode}></Form.Control>
                             <Form.Label className="inputField h3">描述</Form.Label>
-                            <Form.Control id="taskDesc" as='textarea' rows={20} value={task.taskDesc} onChange={handleValueChange} disabled={displayMode}></Form.Control>
+                            <Form.Control id="taskDesc" as='textarea' rows={20} value={task.taskDesc} placeholder="填入任務描述" onChange={handleValueChange} disabled={displayMode}></Form.Control>
                             {renderImg()}
                             <Form.Control id="taskFile" type="file" disabled={displayMode}></Form.Control>
                         </Form.Group>

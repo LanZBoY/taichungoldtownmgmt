@@ -6,13 +6,15 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "./utils/firebase"
 import { collection, getDocs } from "firebase/firestore";
 import CardElement from './Components/CardElement'
-import { Container } from "react-bootstrap";
+import { Container, Image, Modal } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './TaskListPage.css'
+import loadingIcon from './statics/Icon/Spin-1s-200px.gif'
 import NewContentButton from "./Components/NewContentButton";
 
 const TaskList = () => {
     const [tasks, setTasks] = useState([]);
+    const [loadingModal, setLoadingModal] = useState(false);
     useEffect(() => {
         getDocs(collection(firestore, 'tasks')).then((result) => {
             result.docs.forEach(async (doc) => {
@@ -29,10 +31,15 @@ const TaskList = () => {
     }, [])
     return (
         <>
+            <Modal show ={loadingModal} backdrop='static' centered>
+                <Modal.Body>
+                    <Image className="mx-auto d-block" src={loadingIcon}/>
+                </Modal.Body>
+            </Modal>
             <TopBar currentKey={'tasklist'} />
             <Container>
                 {tasks.map((taskData) => {
-                    return <CardElement taskData={taskData} key={taskData.id} />
+                    return <CardElement taskData={taskData} setLoadingModal={setLoadingModal} key={taskData.id} />
                 })}
             <NewContentButton />
             </Container>

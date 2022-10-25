@@ -4,12 +4,13 @@ import { getDoc } from "firebase/firestore";
 import TaskView from "./TaskView";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../utils/firebase";
-const CardElement = ({ taskData }) => {
+const CardElement = ({ taskData, setLoadingModal }) => {
     const [task, setTask] = useState(taskData);
     const [showItem, setShowItem] = useState(false);
     const [displayMode, setDisplayMode] = useState(true)
     const [contents, setContents] = useState([]);
     const showData = async () => {
+        setLoadingModal(true);
         if (contents.length === 0) {
             const docSnap = await getDoc(task.contents);
             let docData = docSnap.data().contents;
@@ -19,6 +20,7 @@ const CardElement = ({ taskData }) => {
             }
             setContents(docData);
         }
+        setLoadingModal(false);
         setShowItem(true);
     }
 

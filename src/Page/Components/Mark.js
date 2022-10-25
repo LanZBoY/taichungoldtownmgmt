@@ -84,7 +84,7 @@ const Mark = ({ contents, setContents, displayMode, index }) => {
             <hr />
             <FormGroup>
                 <Form.Label className="inputField h3">導覽地點({index + 1})</Form.Label>
-                <Form.Control id="markTitle" type="text" value={contents[index].markTitle} onChange={handleMarkChange} disabled={displayMode}></Form.Control>
+                <Form.Control id="markTitle" type="text" value={contents[index].markTitle} placeholder="填入導覽地點" onChange={handleMarkChange} disabled={displayMode}></Form.Control>
                 <Form.Label className="inputField h3">地點內容({index + 1})</Form.Label>
                 {renderMartContent()}
                 <Button onClick={addMarkContent} hidden={displayMode}>新增內容</Button>
