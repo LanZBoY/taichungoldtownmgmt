@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, Container, Form, Navbar } from "react-bootstrap";
-
+import { Button, Container, Form} from "react-bootstrap";
+import TopBar from "./Components/TopBar";
 const LoginPage = () => {
     const correctUserName = "admin";
     const correctPassword = "1215";
@@ -31,9 +31,7 @@ const LoginPage = () => {
 
     return (
         <>
-            <Navbar sticky="top" bg="dark" variant="dark" expand='lg'>
-                <Navbar.Brand><h1>臺中城中城APP任務管理系統</h1></Navbar.Brand>
-            </Navbar>
+            <TopBar hideNav/>
             <Container className="text-center">
                 <Form.Group>
                     <Form.Label>管理者帳號</Form.Label>
