@@ -1,17 +1,21 @@
 import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
-import { Content, Task } from "../model/Task";
+import TaskModel from '../model/Task.json'
+import ContentsModel from '../model/contents.json'
 import Mark from "./Mark";
+import { firestore } from '../utils/firebase'
+import { addDoc, collection } from 'firebase/firestore'
 
-const TaskView = ({ dataId, createMode, displayMode, setDisplayMode, task, setTask, contents, setContents, showItem, setShowItem }) => {
+const TaskView = ({task, setTask, contents, setContents, setTasks, setLoadingModal, createMode, displayMode, setDisplayMode, showItem, setShowItem}) => {
     const TASK_TITLE = 'taskTitle';
     const TASK_DESC = 'taskDesc';
     const handleCloseItem = () => {
-        if (createMode === undefined) {
-            setDisplayMode(true);
-        } else {
-            setTask(new Task());
+        if (createMode) {
+            
+            setTask(TaskModel);
             setContents([]);
+        } else {
+            setDisplayMode(true);
         }
 
         setShowItem(false);
@@ -37,7 +41,7 @@ const TaskView = ({ dataId, createMode, displayMode, setDisplayMode, task, setTa
 
     const handleAddContent = () => {
         setContents((prev) => {
-            return [...prev, new Content()]
+            return [...prev, ContentsModel]
         })
     }
 
@@ -50,13 +54,21 @@ const TaskView = ({ dataId, createMode, displayMode, setDisplayMode, task, setTa
         alert("確定要刪除資料？");
     }
 
-    const conformData = () => {
+    const submmitData = async () => {
         if (createMode) {
             setShowItem(false);
-            /*
-            新增資料邏輯
-            */
-            setTask(new Task());
+            setLoadingModal(true);
+            // 新增資料邏輯
+            const taskCollection = collection(firestore, 'tasks');
+            const contentsColleciton = collection(firestore, 'contents');
+            const newContentsRef = await addDoc(contentsColleciton, {contents : contents});
+            console.log(newContentsRef.id);
+            task.contents = newContentsRef;
+            const newTaskRef = await addDoc(taskCollection, task);
+            console.log(newTaskRef.id);
+
+            setLoadingModal(false);
+            setTask(TaskModel);
             setContents([]);
         } else {
             setDisplayMode(true)
@@ -104,7 +116,7 @@ const TaskView = ({ dataId, createMode, displayMode, setDisplayMode, task, setTa
                 <Button variant="danger" hidden={!displayMode} onClick={handdleDeleteTask}>刪除</Button>
                 <Button variant="warning" hidden={!displayMode} onClick={handdleDisplayMode}>修改</Button>
                 <Button variant="success" onClick={handleAddContent} hidden={displayMode}>新增導覽地點</Button>
-                <Button variant="success" hidden={displayMode} onClick={conformData}>確定</Button>
+                <Button variant="success" hidden={displayMode} onClick={submmitData}>確定</Button>
             </Modal.Footer>
         </Modal>
     )

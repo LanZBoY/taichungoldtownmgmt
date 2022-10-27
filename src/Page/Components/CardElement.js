@@ -1,29 +1,14 @@
-import React, { useState } from "react";
-import { Card } from "react-bootstrap";
-import { getDoc } from "firebase/firestore";
+import React, { Fragment, useState } from "react";
+import { Card } from "react-bootstrap"
 import TaskView from "./TaskView";
+import {  storage } from "../utils/firebase";
+import { getDoc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../utils/firebase";
 const CardElement = ({ taskData, setLoadingModal }) => {
-    const [task, setTask] = useState(taskData);
     const [showItem, setShowItem] = useState(false);
     const [displayMode, setDisplayMode] = useState(true)
+    const [task, setTask] = useState(taskData);
     const [contents, setContents] = useState([]);
-    const showData = async () => {
-        setLoadingModal(true);
-        if (contents.length === 0) {
-            const docSnap = await getDoc(task.contents);
-            let docData = docSnap.data().contents;
-            for (let i = 0; i < docData.length; i++) {
-                const url = await getDownloadURL(ref(storage, docData[i].markImg));
-                docData[i].markImgURL = url;
-            }
-            setContents(docData);
-        }
-        setLoadingModal(false);
-        setShowItem(true);
-    }
-
     const renderImg = () => {
         if (task.taskImgURL !== undefined) {
             return (<Card.Img className="fixImg" src={task.taskImgURL} />);
@@ -31,17 +16,35 @@ const CardElement = ({ taskData, setLoadingModal }) => {
         return null;
     }
 
+    const loadData = async () => {
+        setLoadingModal(true);
+        if(task.contents !== null){
+            const doc = await getDoc(task.contents);
+            let docData = doc.data().contents;
+            console.log(docData);
+            for (let i = 0; i < docData.length; i++) {
+                if (docData[i].markImg !== ""){
+                    const url = await getDownloadURL(ref(storage, docData[i].markImg));
+                    docData[i].markImgURL = url;
+                }
+            }
+            setContents(docData);
+        }
+        setLoadingModal(false);
+        setShowItem(true);
+    }
+
     return (
-        <>
-            <Card className="text-center" border="secondary" onClick={showData}>
+        <Fragment>
+            <Card className="text-center" border="secondary" onClick={loadData}>
                 <Card.Header>{task.taskTitle}</Card.Header>
                 <Card.Body>
                     <Card.Text>{task.taskDesc}</Card.Text>
                     {renderImg()}
                 </Card.Body>
             </Card>
-            <TaskView task={task} setTask={setTask} displayMode={displayMode} setDisplayMode={setDisplayMode} contents={contents} setContents={setContents} showItem={showItem} setShowItem={setShowItem} />
-        </>
+            <TaskView task={task} setTask={setTask} contents={contents} setContents={setContents} displayMode={displayMode} setDisplayMode={setDisplayMode} showItem={showItem} setShowItem={setShowItem} setLoadingModal={setLoadingModal} />
+        </Fragment>
     )
 };
 

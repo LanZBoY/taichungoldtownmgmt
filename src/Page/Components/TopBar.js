@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Badge, Nav, Navbar } from "react-bootstrap/esm";
 import { LinkContainer } from "react-router-bootstrap";
 const TopBar = ({currentKey, hideNav}) => {
     return(
-        <>
+        <Fragment>
             <Navbar sticky="top" bg="dark" variant="dark" expand='lg'>
                 <Navbar.Brand><h1>臺中城中城APP任務管理系統 <Badge bg="warning" text="dark">測試中</Badge></h1> </Navbar.Brand>
             </Navbar>
@@ -19,7 +19,7 @@ const TopBar = ({currentKey, hideNav}) => {
                         </LinkContainer>
                 </Nav.Item>
             </Nav>
-        </>
+        </Fragment>
         
     )
 };
