@@ -6,12 +6,12 @@ import Mark from "./Mark";
 import { firestore } from '../utils/firebase'
 import { addDoc, collection } from 'firebase/firestore'
 
-const TaskView = ({task, setTask, contents, setContents, setTasks, setLoadingModal, createMode, displayMode, setDisplayMode, showItem, setShowItem}) => {
+const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoadingModal, createMode, displayMode, setDisplayMode, showItem, setShowItem }) => {
     const TASK_TITLE = 'taskTitle';
     const TASK_DESC = 'taskDesc';
     const handleCloseItem = () => {
         if (createMode) {
-            
+
             setTask(TaskModel);
             setContents([]);
         } else {
@@ -50,23 +50,32 @@ const TaskView = ({task, setTask, contents, setContents, setTasks, setLoadingMod
         setDisplayMode(false);
     }
 
-    const handdleDeleteTask = () => {
-        alert("確定要刪除資料？");
-    }
+    // const handdleDeleteTask = async () => {
+    //     setLoadingModal(true);
+    //     await deleteDoc(doc(firestore, 'tasks', task.id));
+    //     await deleteDoc(task.contents);
+    //     setLoadingModal(false);
+    //     setShowItem(false);
+    //     setTasks((prev) => {
+    //         prev.splice(index, 1);
+    //         return [...prev];
+    //     })
+    // }
 
-    const submmitData = async () => {
+    const submmitData = () => {
         if (createMode) {
             setShowItem(false);
             setLoadingModal(true);
             // 新增資料邏輯
-            const taskCollection = collection(firestore, 'tasks');
-            const contentsColleciton = collection(firestore, 'contents');
-            const newContentsRef = await addDoc(contentsColleciton, {contents : contents});
-            console.log(newContentsRef.id);
-            task.contents = newContentsRef;
-            const newTaskRef = await addDoc(taskCollection, task);
-            console.log(newTaskRef.id);
-
+            addDoc(collection(firestore, 'contents'), { contents: contents }).then((newContentsRef) => {
+                task.contents = newContentsRef;
+                addDoc(collection(firestore, 'tasks'), task).then((newTaskRef) => {
+                    task.id = newTaskRef.id;
+                    setTasks((prev) => {
+                        return [task, ...prev];
+                    });
+                });
+            });
             setLoadingModal(false);
             setTask(TaskModel);
             setContents([]);
@@ -93,32 +102,32 @@ const TaskView = ({task, setTask, contents, setContents, setTasks, setLoadingMod
     }
 
     return (
-        <Modal show={showItem} onHide={handleCloseItem} size='lg' fullscreen={true}>
-            <Modal.Header closeButton>任務內容</Modal.Header>
-            <Modal.Body>
-                <Container>
-                    <Form>
-                        <Form.Group className="formData">
-                            <Form.Label className="inputField h3">標題</Form.Label>
-                            <Form.Control id="taskTitle" type="text" value={task.taskTitle} placeholder="填入任務標題" onChange={handleValueChange} disabled={displayMode}></Form.Control>
-                            <Form.Label className="inputField h3">描述</Form.Label>
-                            <Form.Control id="taskDesc" as='textarea' rows={20} value={task.taskDesc} placeholder="填入任務描述" onChange={handleValueChange} disabled={displayMode}></Form.Control>
-                            {renderImg()}
-                            <Form.Control id="taskFile" type="file" disabled={displayMode}></Form.Control>
-                        </Form.Group>
-                        <Form.Group className="markData inputField">
-                            {renderMark()}
-                        </Form.Group>
-                    </Form>
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="danger" hidden={!displayMode} onClick={handdleDeleteTask}>刪除</Button>
-                <Button variant="warning" hidden={!displayMode} onClick={handdleDisplayMode}>修改</Button>
-                <Button variant="success" onClick={handleAddContent} hidden={displayMode}>新增導覽地點</Button>
-                <Button variant="success" hidden={displayMode} onClick={submmitData}>確定</Button>
-            </Modal.Footer>
-        </Modal>
+            <Modal show={showItem} onHide={handleCloseItem} size='lg' fullscreen={true}>
+                <Modal.Header closeButton>任務內容</Modal.Header>
+                <Modal.Body>
+                    <Container>
+                        <Form>
+                            <Form.Group className="formData">
+                                <Form.Label className="inputField h3">標題</Form.Label>
+                                <Form.Control id="taskTitle" type="text" value={task.taskTitle} placeholder="填入任務標題" onChange={handleValueChange} disabled={displayMode}></Form.Control>
+                                <Form.Label className="inputField h3">描述</Form.Label>
+                                <Form.Control id="taskDesc" as='textarea' rows={20} value={task.taskDesc} placeholder="填入任務描述" onChange={handleValueChange} disabled={displayMode}></Form.Control>
+                                {renderImg()}
+                                <Form.Control id="taskFile" type="file" disabled={displayMode}></Form.Control>
+                            </Form.Group>
+                            <Form.Group className="markData inputField">
+                                {renderMark()}
+                            </Form.Group>
+                        </Form>
+                    </Container>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" hidden={!displayMode}>刪除</Button>
+                    <Button variant="warning" hidden={!displayMode} onClick={handdleDisplayMode}>修改</Button>
+                    <Button variant="success" onClick={handleAddContent} hidden={displayMode}>新增導覽地點</Button>
+                    <Button variant="success" hidden={displayMode} onClick={submmitData}>確定</Button>
+                </Modal.Footer>
+            </Modal>
     )
 };
 

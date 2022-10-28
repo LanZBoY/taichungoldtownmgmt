@@ -4,7 +4,7 @@ import TaskView from "./TaskView";
 import {  storage } from "../utils/firebase";
 import { getDoc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
-const CardElement = ({ taskData, setLoadingModal }) => {
+const CardElement = ({index, taskData, setTasks, setLoadingModal }) => {
     const [showItem, setShowItem] = useState(false);
     const [displayMode, setDisplayMode] = useState(true)
     const [task, setTask] = useState(taskData);
@@ -21,7 +21,6 @@ const CardElement = ({ taskData, setLoadingModal }) => {
         if(task.contents !== null){
             const doc = await getDoc(task.contents);
             let docData = doc.data().contents;
-            console.log(docData);
             for (let i = 0; i < docData.length; i++) {
                 if (docData[i].markImg !== ""){
                     const url = await getDownloadURL(ref(storage, docData[i].markImg));
@@ -30,8 +29,8 @@ const CardElement = ({ taskData, setLoadingModal }) => {
             }
             setContents(docData);
         }
-        setLoadingModal(false);
         setShowItem(true);
+        setLoadingModal(false);
     }
 
     return (
@@ -43,7 +42,7 @@ const CardElement = ({ taskData, setLoadingModal }) => {
                     {renderImg()}
                 </Card.Body>
             </Card>
-            <TaskView task={task} setTask={setTask} contents={contents} setContents={setContents} displayMode={displayMode} setDisplayMode={setDisplayMode} showItem={showItem} setShowItem={setShowItem} setLoadingModal={setLoadingModal} />
+            <TaskView index={index} task={task} setTask={setTask} setTasks={setTasks} contents={contents} setContents={setContents} displayMode={displayMode} setDisplayMode={setDisplayMode} showItem={showItem} setShowItem={setShowItem} setLoadingModal={setLoadingModal} />
         </Fragment>
     )
 };

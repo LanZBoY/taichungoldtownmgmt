@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import TaskView from "./TaskView";
 import TaskModel from '../model/Task.json'
 import { Card } from "react-bootstrap";
-const NewContentButton = ({setLoadingModal}) => {
+const NewContentButton = ({ setLoadingModal, setTasks }) => {
     const [showItem, setShowItem] = useState(false);
     const [task, setTask] = useState(TaskModel);
     const [contents, setContents] = useState([]);
@@ -11,7 +11,7 @@ const NewContentButton = ({setLoadingModal}) => {
             <Card onClick={() => setShowItem(true)} bg='success' className="cardList text-center" text='white'>
                 <Card.Header>新增項目</Card.Header>
             </Card>
-            <TaskView createMode setLoadingModal={setLoadingModal} task={task} setTask={setTask} contents={contents} setContents={setContents} showItem={showItem} setShowItem={setShowItem} />
+            <TaskView createMode setLoadingModal={setLoadingModal} task={task} setTask={setTask} setTasks={setTasks} contents={contents} setContents={setContents} showItem={showItem} setShowItem={setShowItem} />
         </Fragment>
     );
 }

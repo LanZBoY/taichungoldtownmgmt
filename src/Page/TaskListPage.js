@@ -21,7 +21,7 @@ const TaskListPage = () => {
             result.docs.forEach(async (doc) => {
                 const data = doc.data();
                 data.id = doc.id;
-                if(data.taskImg !== ''){
+                if (data.taskImg !== '') {
                     const url = await getDownloadURL(ref(storage, data.taskImg));
                     data.taskImgURL = url;
                 }
@@ -32,20 +32,20 @@ const TaskListPage = () => {
         });
 
     }, [])
-    
+
     return (
         <Fragment>
-            <Modal show ={loadingModal} backdrop='static' centered>
+            <Modal show={loadingModal} backdrop='static' centered>
                 <Modal.Body>
-                    <Image className="mx-auto d-block" src={loadingIcon}/>
+                    <Image className="mx-auto d-block" src={loadingIcon} />
                 </Modal.Body>
             </Modal>
             <TopBar currentKey={'tasklist'} />
             <Container>
-                {tasks.map((taskData) => {
-                    return <CardElement taskData={taskData} setLoadingModal={setLoadingModal} key={taskData.id} />
+                {tasks.map((taskData, index) => {
+                    return <CardElement index={index} taskData={taskData} setTasks={setTasks} setLoadingModal={setLoadingModal} key={taskData.id} />
                 })}
-            <NewContentButton setLoadingModal={setLoadingModal} />
+                <NewContentButton setLoadingModal={setLoadingModal} setTasks={setTasks} />
             </Container>
         </Fragment>
     )
