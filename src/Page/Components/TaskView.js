@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
 import TaskModel from '../model/Task.json'
-import ContentsModel from '../model/contents.json'
+import ContentsModel from '../model/contents'
 import Mark from "./Mark";
 import { firestore } from '../utils/firebase'
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
 
 const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoadingModal, createMode, displayMode, setDisplayMode, showItem, setShowItem }) => {
     const TASK_TITLE = 'taskTitle';
@@ -12,7 +12,7 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
     const handleCloseItem = () => {
         if (createMode) {
 
-            setTask(TaskModel);
+            setTask({...TaskModel});
             setContents([]);
         } else {
             setDisplayMode(true);
@@ -41,7 +41,7 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
 
     const handleAddContent = () => {
         setContents((prev) => {
-            return [...prev, ContentsModel]
+            return [...prev, {...ContentsModel}];
         })
     }
 
@@ -50,17 +50,19 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
         setDisplayMode(false);
     }
 
-    // const handdleDeleteTask = async () => {
-    //     setLoadingModal(true);
-    //     await deleteDoc(doc(firestore, 'tasks', task.id));
-    //     await deleteDoc(task.contents);
-    //     setLoadingModal(false);
-    //     setShowItem(false);
-    //     setTasks((prev) => {
-    //         prev.splice(index, 1);
-    //         return [...prev];
-    //     })
-    // }
+    const handdleDeleteTask = async () => {
+        if(window.confirm("確定要刪除嗎？") === true){
+            setLoadingModal(true);
+            await deleteDoc(doc(firestore, 'tasks', task.id));
+            await deleteDoc(task.contents);
+            setLoadingModal(false);
+            setShowItem(false);
+            setTasks((prev) => {
+                prev.splice(index, 1);
+                return [...prev];
+            })
+        }
+    }
 
     const submmitData = () => {
         if (createMode) {
@@ -74,11 +76,12 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
                     setTasks((prev) => {
                         return [task, ...prev];
                     });
+                    setLoadingModal(false);
+                    setTask({...TaskModel});
+                    setContents([]);
                 });
             });
-            setLoadingModal(false);
-            setTask(TaskModel);
-            setContents([]);
+            
         } else {
             setDisplayMode(true)
         }
@@ -122,7 +125,7 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" hidden={!displayMode}>刪除</Button>
+                    <Button variant="danger" onClick={handdleDeleteTask} hidden={!displayMode}>刪除</Button>
                     <Button variant="warning" hidden={!displayMode} onClick={handdleDisplayMode}>修改</Button>
                     <Button variant="success" onClick={handleAddContent} hidden={displayMode}>新增導覽地點</Button>
                     <Button variant="success" hidden={displayMode} onClick={submmitData}>確定</Button>
