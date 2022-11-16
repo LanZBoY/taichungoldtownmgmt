@@ -61,23 +61,25 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
 
     const submmitData = () => {
         if (createMode) {
-            // console.log(task);
-            console.log(contents);
-            // setShowItem(false);
-            // setLoadingModal(true);
+            const uploadTask = {...task};
+            const uploadContents = contents.map((data) => {
+                return {...data};
+            })
+            setShowItem(false);
+            setLoadingModal(true);
             // 新增資料邏輯
-            // addDoc(collection(firestore, 'contents'), { contents: contents }).then((newContentsRef) => {
-            //     task.contents = newContentsRef;
-            //     addDoc(collection(firestore, 'tasks'), task).then((newTaskRef) => {
-            //         task.id = newTaskRef.id;
-            //         setTasks((prev) => {
-            //             return [task, ...prev];
-            //         });
-            //         setLoadingModal(false);
-            //         setTask({...new Task()});
-            //         setContents([]);
-            //     });
-            // });
+            addDoc(collection(firestore, 'contents'), { contents: uploadContents }).then((newContentsRef) => {
+                uploadTask.contents = newContentsRef;
+                addDoc(collection(firestore, 'tasks'), uploadTask).then((newTaskRef) => {
+                    uploadTask.id = newTaskRef.id;
+                    setTasks((prev) => {
+                        return [uploadTask, ...prev];
+                    });
+                    setLoadingModal(false);
+                    setTask(new Task());
+                    setContents([new Content()]);
+                });
+            });
             // TODO: 新增照片邏輯
             
         } else {

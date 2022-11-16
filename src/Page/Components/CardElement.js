@@ -4,6 +4,7 @@ import TaskView from "./TaskView";
 import {  storage } from "../utils/firebase";
 import { getDoc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
+import { Content } from "../../model/DataModel";
 const CardElement = ({index, taskData, setTasks, setLoadingModal }) => {
     const [showItem, setShowItem] = useState(false);
     const [displayMode, setDisplayMode] = useState(true)
@@ -20,7 +21,10 @@ const CardElement = ({index, taskData, setTasks, setLoadingModal }) => {
         setLoadingModal(true);
         if(task.contents !== null){
             const doc = await getDoc(task.contents);
-            let docData = doc.data().contents;
+            let docData = doc.data().contents.map((data)=>{
+                return new Content({...data})
+            });
+            console.log(docData);
             for (let i = 0; i < docData.length; i++) {
                 if (docData[i].markImg !== ""){
                     const url = await getDownloadURL(ref(storage, docData[i].markImg));
