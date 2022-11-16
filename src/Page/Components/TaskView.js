@@ -1,19 +1,16 @@
 import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
-import TaskModel from '../model/Task.json'
-import ContentsModel from '../model/contents'
 import Mark from "./Mark";
 import { firestore } from '../utils/firebase'
 import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
+import { Content, Task } from "../../model/DataModel";
+import { TASK } from "../../model/DataSchema";
 
 const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoadingModal, createMode, displayMode, setDisplayMode, showItem, setShowItem }) => {
-    const TASK_TITLE = 'taskTitle';
-    const TASK_DESC = 'taskDesc';
     const handleCloseItem = () => {
         if (createMode) {
-
-            setTask({...TaskModel});
-            setContents([]);
+            setTask(new Task());
+            setContents([new Content()]);
         } else {
             setDisplayMode(true);
         }
@@ -22,18 +19,16 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
     };
 
     const handleValueChange = (event) => {
-        const target = event.target;
         setTask((prev) => {
-            if (target.id === TASK_TITLE) {
-                return {
-                    ...prev,
-                    taskTitle: target.value
-                };
-            } else if (target.id === TASK_DESC) {
-                return {
-                    ...prev,
-                    taskDesc: target.value
-                };
+            const target = event.target;
+            if (target.id === TASK.TASK_TITLE) {
+                return new Task({...prev, taskTitle: target.value, id : prev.id, taskImgURL : prev.taskImgURL , taskImgBlob : prev.taskImgBlob});
+            } else if (target.id === TASK.TASL_DESC) {
+                return new Task({...prev, taskDesc: target.value, id : prev.id, taskImgURL : prev.taskImgURL , taskImgBlob : prev.taskImgBlob});
+            } else if (target.id === TASK.TASK_FILE){
+                const file = target.files[0];
+                const previewURL = URL.createObjectURL(file);
+                return new Task({...prev, taskImg: file.name, taskImgURL : previewURL , taskImgBlob : file})
             }
             return prev;
         });
@@ -41,7 +36,7 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
 
     const handleAddContent = () => {
         setContents((prev) => {
-            return [...prev, {...ContentsModel}];
+            return [...prev, new Content()];
         })
     }
 
@@ -66,27 +61,28 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
 
     const submmitData = () => {
         if (createMode) {
-            setShowItem(false);
-            setLoadingModal(true);
+            // console.log(task);
+            console.log(contents);
+            // setShowItem(false);
+            // setLoadingModal(true);
             // 新增資料邏輯
-            addDoc(collection(firestore, 'contents'), { contents: contents }).then((newContentsRef) => {
-                task.contents = newContentsRef;
-                addDoc(collection(firestore, 'tasks'), task).then((newTaskRef) => {
-                    task.id = newTaskRef.id;
-                    setTasks((prev) => {
-                        return [task, ...prev];
-                    });
-                    setLoadingModal(false);
-                    setTask({...TaskModel});
-                    setContents([]);
-                });
-            });
+            // addDoc(collection(firestore, 'contents'), { contents: contents }).then((newContentsRef) => {
+            //     task.contents = newContentsRef;
+            //     addDoc(collection(firestore, 'tasks'), task).then((newTaskRef) => {
+            //         task.id = newTaskRef.id;
+            //         setTasks((prev) => {
+            //             return [task, ...prev];
+            //         });
+            //         setLoadingModal(false);
+            //         setTask({...new Task()});
+            //         setContents([]);
+            //     });
+            // });
+            // TODO: 新增照片邏輯
             
         } else {
             setDisplayMode(true)
         }
-        // console.log(task);
-        // console.log(contents);
     }
 
     const renderMark = () => {
@@ -116,7 +112,7 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
                                 <Form.Label className="inputField h3">描述</Form.Label>
                                 <Form.Control id="taskDesc" as='textarea' rows={20} value={task.taskDesc} placeholder="填入任務描述" onChange={handleValueChange} disabled={displayMode}></Form.Control>
                                 {renderImg()}
-                                <Form.Control id="taskFile" type="file" disabled={displayMode}></Form.Control>
+                                <Form.Control id="taskFile" type="file" disabled={displayMode} onChange={handleValueChange}></Form.Control>
                             </Form.Group>
                             <Form.Group className="markData inputField">
                                 {renderMark()}

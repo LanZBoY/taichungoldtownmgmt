@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from "react";
 import TaskView from "./TaskView";
-import TaskModel from '../model/Task.json'
 import { Card } from "react-bootstrap";
+import { Content, Task } from "../../model/DataModel";
 const NewContentButton = ({ setLoadingModal, setTasks }) => {
     const [showItem, setShowItem] = useState(false);
-    const [task, setTask] = useState({...TaskModel});
-    const [contents, setContents] = useState([]);
+    const [task, setTask] = useState(new Task());
+    const [contents, setContents] = useState([new Content()]);
     return (
         <Fragment>
             <Card  onClick={() => setShowItem(true)} bg='success' className="cardList text-center" text='white'>

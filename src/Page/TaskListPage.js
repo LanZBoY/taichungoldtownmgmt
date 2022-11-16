@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './TaskListPage.css'
 import loadingIcon from './statics/Icon/Spin-1s-200px.gif'
 import NewContentButton from "./Components/NewContentButton";
+import { Task } from "../model/DataModel";
 
 const TaskListPage = () => {
     const [tasks, setTasks] = useState([]);
@@ -26,7 +27,7 @@ const TaskListPage = () => {
                     data.taskImgURL = url;
                 }
                 setTasks((prev) => {
-                    return [...prev, data]
+                    return [...prev, new Task(data)]
                 })
             })
         });
