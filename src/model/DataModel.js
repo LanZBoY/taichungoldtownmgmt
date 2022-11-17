@@ -39,13 +39,13 @@ class Content {
     markImg = "";
     markLatitude = 0.0;
     markLongitude = 0.0;
-    constructor(content){
-        if (content !== undefined){
-            this.markTitle = content.markTitle;
-            this.markContent = content.markContent;
-            this.markImg = content.markImg;
-            this.markLatitude = content.markLatitude;
-            this.markLongitude = content.markLongitude;
+    constructor(contents){
+        if (contents !== undefined){
+            this.markTitle = contents.markTitle;
+            this.markContent = contents.markContent;
+            this.markImg = contents.markImg;
+            this.markLatitude = contents.markLatitude;
+            this.markLongitude = contents.markLongitude;
         }
     }
 
