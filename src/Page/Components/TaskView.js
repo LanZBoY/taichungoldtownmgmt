@@ -2,7 +2,8 @@ import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
 import Mark from "./Mark";
 import { firestore } from '../utils/firebase'
-import { addDoc, collection, deleteDoc, doc } from 'firebase/firestore'
+import { setDoc, deleteDoc, doc } from 'firebase/firestore'
+import { uuidv4 } from "@firebase/util";
 import { Content, Task } from "../../model/DataModel";
 import { TASK } from "../../model/DataSchema";
 
@@ -62,22 +63,24 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
     const submmitData = () => {
         if (createMode) {
             // console.log(task);
-            console.log(contents);
-            // setShowItem(false);
-            // setLoadingModal(true);
+            // console.log(contents);
+            setShowItem(false);
+            setLoadingModal(true);
             // 新增資料邏輯
-            // addDoc(collection(firestore, 'contents'), { contents: contents }).then((newContentsRef) => {
-            //     task.contents = newContentsRef;
-            //     addDoc(collection(firestore, 'tasks'), task).then((newTaskRef) => {
-            //         task.id = newTaskRef.id;
-            //         setTasks((prev) => {
-            //             return [task, ...prev];
-            //         });
-            //         setLoadingModal(false);
-            //         setTask({...new Task()});
-            //         setContents([]);
-            //     });
-            // });
+            const newContentsRef = doc(firestore, 'contents', uuidv4());
+            setDoc(newContentsRef, {contents : contents.map((data) => {return {...data}})}).then(() =>{
+                task.contents = newContentsRef;
+                const newTaskRef = doc(firestore, 'tasks', uuidv4());
+                setDoc(newTaskRef, {...task}).then(() => {
+                    console.log("DONE");
+                    setTasks((prev) => {
+                        return [task, ...prev];
+                    });
+                    setLoadingModal(false);
+                    setTask(new Task());
+                    setContents([new Content()])
+                });
+            })
             // TODO: 新增照片邏輯
             
         } else {
