@@ -22,8 +22,16 @@ class Task {
         return this.#id;
     }
 
+    set id(id){
+        this.#id = id;
+    }
+
     get taskImgURL(){
         return this.#taskImgURL;
+    }
+
+    set taskImgURL(url){
+        this.#taskImgURL = url;
     }
     
     get taskImgBlob(){

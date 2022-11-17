@@ -1,11 +1,13 @@
 import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
 import Mark from "./Mark";
-import { firestore } from '../utils/firebase'
+import { firestore, storage } from '../utils/firebase'
+import { getDownloadURL, ref } from "firebase/storage";
 import { setDoc, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { uuidv4 } from "@firebase/util";
 import { Content, Task } from "../../model/DataModel";
-import { TASK } from "../../model/DataSchema";
+import { TASK, MARK } from "../../model/DataSchema";
+import { uploadBytes } from "firebase/storage";
 
 const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoadingModal, createMode, displayMode, setDisplayMode, showItem, setShowItem }) => {
     const handleCloseItem = () => {
@@ -60,45 +62,53 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
         }
     }
 
-    const submmitData = () => {
+    const submmitData = async () => {
         if (createMode) {
-            // setShowItem(false);
-            // setLoadingModal(true);
+            setShowItem(false);
+            setLoadingModal(true);
             // 新增資料邏輯
             const newContentsRef = doc(firestore, 'contents', uuidv4());
             const newTaskRef = doc(firestore, 'tasks', uuidv4());
-            // task路徑
+            task.id = newTaskRef.id;
+            task.contents = newContentsRef;
+            // task跟content的相片邏輯
             if(task.taskImg !== ""){
-                task.taskImg = newTaskRef.id + '/' + task.taskImg;
+                task.taskImg = TASK.COLLECTION.STORAGE + '/' + newTaskRef.id + '/' + task.taskImg;
             }
-            // Content路徑
             contents = contents.map((content) =>{
                 if (content.markImg !== ""){
-                    content.markImg = newTaskRef.id + '/' + content.markImg;
+                    content.markImg = MARK.COLLECTION.STORAGE + '/' + newContentsRef.id + '/' + content.markImg;
                 }
-                return {...content};
+                return content;
             });
-            // setDoc(newContentsRef, {contents : contents.map((data) => {return {...data}})}).then(() =>{
-            //     task.contents = newContentsRef;
-            //     setDoc(newTaskRef, {...task}).then(() => {
-            //         // 確保資料的一致性，所以新增完必須向重取一次資料
-            //         getDoc(newTaskRef).then((docSnap) => {
+            await setDoc(newContentsRef, {contents : contents.map((content) => {
+                return {...content};
+            })});
+            await setDoc(newTaskRef, {...task});
+            // 上傳照片邏輯
+            const taskImgRef = ref(storage, task.taskImg);
+            await uploadBytes(taskImgRef, task.taskImgBlob)           
+            for (const content of contents){
+                if(content.markImg !== ""){
+                    const contentImgRef = ref(storage, content.markImg);
+                    await uploadBytes(contentImgRef, content.markImgBlob);
+                }
+            }
 
-            //             if(docSnap.exists()){
-            //                 setTasks((prev) => {
-            //                     const newTask = new Task({id: newContentsRef.id , ...docSnap.data()});
-            //                     return [newTask, ...prev];
-            //                 });
-            //             }
-            //             setLoadingModal(false);
-
-            //         })
-            //         setTask(new Task());
-            //         setContents([new Content()])
-            //     });
-            // })
-            // TODO: 新增照片邏輯
-            
+            const docSnap = await getDoc(newTaskRef)
+            if (docSnap.exists()){
+                task = new Task({...docSnap.data()});
+                task.id = docSnap.id;
+                if(task.taskImg !== ""){
+                    task.taskImgURL = await getDownloadURL(ref(storage, task.taskImg));
+                }
+                setTasks((prev) => {
+                    return [task, ...prev];
+                });
+            }
+            setTask(new Task());
+            setContents([new Content()]);
+            setLoadingModal(false);
         } else {
             setDisplayMode(true)
         }

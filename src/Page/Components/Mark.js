@@ -33,6 +33,7 @@ const Mark = ({ contents, setContents, displayMode, index }) => {
             setContents((prev) => {
                 prev[index].markImgBlob = file;
                 prev[index].markImgURL = url;
+                prev[index].markImg = file.name;
                 return [...prev]
             })
         }

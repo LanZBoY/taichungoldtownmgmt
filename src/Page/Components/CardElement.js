@@ -24,7 +24,6 @@ const CardElement = ({index, taskData, setTasks, setLoadingModal }) => {
             let docData = doc.data().contents.map((data)=>{
                 return new Content({...data})
             });
-            console.log(docData);
             for (let i = 0; i < docData.length; i++) {
                 if (docData[i].markImg !== ""){
                     const url = await getDownloadURL(ref(storage, docData[i].markImg));
