@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
 import Mark from "./Mark";
 import { firestore, storage } from '../utils/firebase'
-import { getDownloadURL, ref } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref } from "firebase/storage";
 import { setDoc, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { uuidv4 } from "@firebase/util";
 import { Content, Task } from "../../model/DataModel";
@@ -51,8 +51,20 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
     const handdleDeleteTask = async () => {
         if(window.confirm("確定要刪除嗎？") === true){
             setLoadingModal(true);
+
             await deleteDoc(doc(firestore, 'tasks', task.id));
+
+            if (task.taskImg !== ""){
+                await deleteObject(ref(storage, task.taskImg));
+            }
+
             await deleteDoc(task.contents);
+
+            for (const content of contents){
+                if(content.markImg !== ""){
+                    await deleteObject(ref(storage, content.markImg));
+                }
+            }
             setLoadingModal(false);
             setShowItem(false);
             setTasks((prev) => {

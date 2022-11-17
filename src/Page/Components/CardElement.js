@@ -21,7 +21,7 @@ const CardElement = ({index, taskData, setTasks, setLoadingModal }) => {
         setLoadingModal(true);
         if(task.contents !== null){
             const doc = await getDoc(task.contents);
-            let docData = doc.data().contents.map((data)=>{
+            const docData = doc.data().contents.map((data)=>{
                 return new Content({...data})
             });
             for (let i = 0; i < docData.length; i++) {
