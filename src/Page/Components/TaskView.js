@@ -122,7 +122,8 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
             setContents([new Content()]);
             setLoadingModal(false);
         } else {
-            setDisplayMode(true)
+            
+            setDisplayMode(true);
         }
     }
 

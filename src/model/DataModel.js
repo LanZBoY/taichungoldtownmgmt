@@ -1,3 +1,14 @@
+class User {
+    username = "";
+    password = "";
+    constructor(user){
+        if(user !== undefined){
+            this.username = user.username;
+            this.password = user.password;
+        }
+    }
+}
+
 class Task {
     #id = undefined;
     #taskImgURL = undefined;
@@ -73,4 +84,4 @@ class Content {
         this.#markImgBlob = blob
     }
 }
-export { Task , Content}
+export { Task , Content, User}
