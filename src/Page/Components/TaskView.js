@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Form, Modal, Image } from "react-bootstrap";
 import Mark from "./Mark";
 import { firestore } from '../utils/firebase'
-import { setDoc, deleteDoc, doc } from 'firebase/firestore'
+import { setDoc, deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { uuidv4 } from "@firebase/util";
 import { Content, Task } from "../../model/DataModel";
 import { TASK } from "../../model/DataSchema";
@@ -62,25 +62,41 @@ const TaskView = ({index, task, setTask, contents, setContents, setTasks, setLoa
 
     const submmitData = () => {
         if (createMode) {
-            // console.log(task);
-            // console.log(contents);
-            setShowItem(false);
-            setLoadingModal(true);
+            // setShowItem(false);
+            // setLoadingModal(true);
             // 新增資料邏輯
             const newContentsRef = doc(firestore, 'contents', uuidv4());
-            setDoc(newContentsRef, {contents : contents.map((data) => {return {...data}})}).then(() =>{
-                task.contents = newContentsRef;
-                const newTaskRef = doc(firestore, 'tasks', uuidv4());
-                setDoc(newTaskRef, {...task}).then(() => {
-                    console.log("DONE");
-                    setTasks((prev) => {
-                        return [task, ...prev];
-                    });
-                    setLoadingModal(false);
-                    setTask(new Task());
-                    setContents([new Content()])
-                });
-            })
+            const newTaskRef = doc(firestore, 'tasks', uuidv4());
+            // task路徑
+            if(task.taskImg !== ""){
+                task.taskImg = newTaskRef.id + '/' + task.taskImg;
+            }
+            // Content路徑
+            contents = contents.map((content) =>{
+                if (content.markImg !== ""){
+                    content.markImg = newTaskRef.id + '/' + content.markImg;
+                }
+                return {...content};
+            });
+            // setDoc(newContentsRef, {contents : contents.map((data) => {return {...data}})}).then(() =>{
+            //     task.contents = newContentsRef;
+            //     setDoc(newTaskRef, {...task}).then(() => {
+            //         // 確保資料的一致性，所以新增完必須向重取一次資料
+            //         getDoc(newTaskRef).then((docSnap) => {
+
+            //             if(docSnap.exists()){
+            //                 setTasks((prev) => {
+            //                     const newTask = new Task({id: newContentsRef.id , ...docSnap.data()});
+            //                     return [newTask, ...prev];
+            //                 });
+            //             }
+            //             setLoadingModal(false);
+
+            //         })
+            //         setTask(new Task());
+            //         setContents([new Content()])
+            //     });
+            // })
             // TODO: 新增照片邏輯
             
         } else {
